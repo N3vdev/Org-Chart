@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <link
@@ -20,7 +20,7 @@
     <script src="https://cdn.jsdelivr.net/npm/d3-org-chart@2.6.0"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3-flextree@2.1.2/build/d3-flextree.js"></script>
 
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="styles.css" />
   </head>
 
   <body>
@@ -28,27 +28,27 @@
 
     <div class="action-buttons">
       <button onclick="chart.fit()" class="btn">
-        <i class="fas fa-sync"></i> fit
+        <i class="fas fa-sync"></i> Fit
       </button>
 
       <button onclick='chart.layout(["right","bottom","left","top"][index++%4]).render().fit()' class="btn">
-        <i class="fas fa-retweet"></i> swap
+        <i class="fas fa-retweet"></i> Swap
       </button>
 
       <button onclick="chart.compact(!!(compact++%2)).render().fit()" class="btn">
-        <i class="fas fa-sitemap"></i> compact
+        <i class="fas fa-sitemap"></i> Compact
       </button>
 
       <button onclick="chart.setActiveNodeCentered(!!(actNdCent++%2)).render()" class="btn">
-        <i class="fas fa-border-none"></i> center active
+        <i class="fas fa-crosshairs"></i> Center
       </button>
 
       <button onclick="chart.zoomOut()" class="btn">
-        <i class="fas fa-minus"></i> zoom out
+        <i class="fas fa-search-minus"></i> Zoom Out
       </button>
       
       <button onclick="chart.zoomIn()" class="btn">
-        <i class="fas fa-plus"></i> zoom in
+        <i class="fas fa-search-plus"></i> Zoom In
       </button>
     </div>
 

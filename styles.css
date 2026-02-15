@@ -1,68 +1,163 @@
-/* Modern Light Theme Variables */
+/* Modern Clean Theme Variables */
 :root {
-  --bg-color: #f8f9fa;
-  --dot-color: #e1e4e8;
-  --text-main: #2c3e50;
-  --primary-color: #3b82f6; 
+  --bg-primary: #f0f2f5;
+  --bg-secondary: #ffffff;
+  --dot-color: #d1d5db;
+  --text-dark: #1f2937;
+  --text-light: #ffffff;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
+  --shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.18);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   overflow: hidden;
-  background-color: var(--bg-color);
+  background: #f0f2f5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .chart-container {
   height: 100vh;
-  background-color: var(--bg-color);
-  /* CSS Dot Pattern */
-  background-image: radial-gradient(var(--dot-color) 2px, transparent 2px);
-  background-size: 20px 20px;
+  width: 100vw;
+  position: relative;
+  /* Modern dotted texture background */
+  background-color: #f0f2f5;
+  background-image: 
+    radial-gradient(circle, #d1d5db 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-position: 0 0;
 }
 
-/* --- Button Styles --- */
+/* Subtle overlay for depth */
+.chart-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(ellipse at top left, rgba(99, 102, 241, 0.03), transparent 50%),
+              radial-gradient(ellipse at bottom right, rgba(236, 72, 153, 0.03), transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* --- Modern Rounded Button Styles --- */
 .btn {
-  margin: 3px;
+  margin: 4px;
   cursor: pointer;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  padding: 6px 12px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  background-color: #ffffff;
-  color: var(--text-main);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  transition: all 0.2s ease;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 18px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+  color: var(--text-dark);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.btn:hover::before {
+  left: 100%;
 }
 
 .btn:hover {
-  background-color: #f1f5f9; /* Changed from red to soft grey */
-  border-color: #cbd5e1;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12), 0 3px 6px rgba(0, 0, 0, 0.08);
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+.btn:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .btn i {
-  color: var(--primary-color);
+  font-size: 0.9rem;
+  transition: transform 0.3s ease;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.btn:hover i {
+  transform: scale(1.15) rotate(5deg);
 }
 
 .action-buttons {
   position: absolute;
-  bottom: 20px;
-  right: 20px;
+  bottom: 24px;
+  right: 24px;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 8px;
-  z-index: 10;
+  gap: 10px;
+  z-index: 100;
+  animation: slideInRight 0.5s ease-out;
 }
 
-/* Remove old dark mode overlays */
-.svg-chart-container:before {
-  display: none;
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Smooth scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(241, 245, 249, 0.5);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #cbd5e1, #94a3b8);
+  border-radius: 10px;
+  border: 2px solid rgba(241, 245, 249, 0.5);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #94a3b8, #64748b);
+}
+
+/* Remove any legacy overlays */
+.svg-chart-container::before,
+.svg-chart-container::after {
+  display: none !important;
 }

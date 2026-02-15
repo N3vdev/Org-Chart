@@ -11,6 +11,7 @@ const data = [
   { id: 101, parentId: 100, first_name: 'Neena', last_name: 'Kochhar', department_name: 'Executive' },
   { id: 102, parentId: 100, first_name: 'Lex', last_name: 'De Haan', department_name: 'Executive' },
   { id: 103, parentId: 100, first_name: 'David', last_name: 'Austin', department_name: 'Operations' },
+  
   { id: 104, parentId: 100, first_name: 'Sarah', last_name: 'Bell', department_name: 'HR' },
   { id: 201, parentId: 101, first_name: 'Nancy', last_name: 'Greenberg', department_name: 'Finance' },
   { id: 202, parentId: 100, first_name: 'Daniel', last_name: 'Faviet', department_name: 'Finance' },
@@ -84,13 +85,16 @@ data.forEach(d => {
 
 // C. Color Inheritance Logic
 function processColors(data) {
+    // Vibrant Modern Color Palette
     const colorPalette = [
-        '#3b82f6', // Blue
-        '#10b981', // Emerald Green
-        '#8b5cf6', // Violet
-        '#f59e0b', // Amber/Orange
+        '#6366f1', // Indigo
         '#ec4899', // Pink
-        '#06b6d4'  // Cyan
+        '#8b5cf6', // Violet
+        '#06b6d4', // Cyan
+        '#10b981', // Emerald
+        '#f59e0b', // Amber
+        '#ef4444', // Red
+        '#3b82f6'  // Blue
     ];
     
     const nodeMap = {};
@@ -111,7 +115,7 @@ function processColors(data) {
     });
 
     function getBranchColor(node) {
-        if (node.id === rootId) return '#2c3e50'; 
+        if (node.id === rootId) return '#1e293b'; // Dark slate for root
         if (branchColors[node.id]) return branchColors[node.id]; 
         
         let current = node;
@@ -124,7 +128,7 @@ function processColors(data) {
             return branchColors[current.id];
         }
         
-        return '#cbd5e0';
+        return '#64748b'; // Default color
     }
 
     data.forEach(d => {
@@ -134,36 +138,48 @@ function processColors(data) {
 
 processColors(data);
 
+// Helper function to adjust color brightness
+function adjustColorBrightness(color, amount) {
+    const clamp = (num) => Math.min(255, Math.max(0, num));
+    const num = parseInt(color.replace('#', ''), 16);
+    const r = clamp((num >> 16) + amount);
+    const g = clamp(((num >> 8) & 0x00FF) + amount);
+    const b = clamp((num & 0x0000FF) + amount);
+    return '#' + ((r << 16) | (g << 8) | b).toString(16).padStart(6, '0');
+}
+
 // 3. RENDER CHART
 document.addEventListener('DOMContentLoaded', () => {
     chart = new d3.OrgChart()
       .container('.chart-container')
       .data(data)
-      .nodeHeight((d) => 100)
-      .nodeWidth((d) => 220)
-      .childrenMargin((d) => 50)
-      .compactMarginBetween((d) => 25)
-      .compactMarginPair((d) => 50)
-      .neightbourMargin((a, b) => 25)
-      .siblingsMargin((d) => 25)
+      .nodeHeight((d) => 120)
+      .nodeWidth((d) => 250)
+      .childrenMargin((d) => 60)
+      .compactMarginBetween((d) => 35)
+      .compactMarginPair((d) => 60)
+      .neightbourMargin((a, b) => 35)
+      .siblingsMargin((d) => 35)
       
       .buttonContent(({ node, state }) => {
+        const color = node.data._borderColor;
         return `<div style="
-            color:#718096;
-            background-color:#ffffff;
+            color:#ffffff;
+            background: linear-gradient(135deg, ${color}, ${adjustColorBrightness(color, -20)});
             border-radius:50%;
-            width:20px;
-            height:20px;
+            width:28px;
+            height:28px;
             display:flex;
             align-items:center;
             justify-content:center;
-            margin-top: 10px;
-            margin-left: 9px;
-            font-size:10px;
+            margin-top: 5px;
+            margin-left: 10px;
+            font-size:12px;
             cursor:pointer;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            border: 1px solid #cbd5e0;"> 
-            <span style="font-size:8px">
+            box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+            border: 2px solid #ffffff;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);"> 
+            <span style="font-size:10px">
               ${node.children ? `<i class="fas fa-chevron-up"></i>` : `<i class="fas fa-chevron-down"></i>`}
             </span>
         </div>`;
@@ -172,7 +188,9 @@ document.addEventListener('DOMContentLoaded', () => {
       .linkUpdate(function (d, i, arr) {
         d3.select(this)
           .attr('stroke', (d) => d.data._borderColor)
-          .attr('stroke-width', (d) => d.data._upToTheRootHighlighted ? 3 : 1.5);
+          .attr('stroke-width', (d) => d.data._upToTheRootHighlighted ? 3.5 : 2.5)
+          .attr('stroke-opacity', 0.8)
+          .style('transition', 'all 0.3s ease');
 
         if (d.data._upToTheRootHighlighted) {
           d3.select(this).raise();
@@ -181,72 +199,139 @@ document.addEventListener('DOMContentLoaded', () => {
 
       .nodeContent(function (d, i, arr, state) {
         const color = d.data._borderColor;
+        const lighterColor = adjustColorBrightness(color, 30);
         const isVirtualRoot = d.data.id === 'virtual_root';
 
         // Special Styling for the Virtual Root
         if (isVirtualRoot) {
             return `
-            <div style="
+            <div class="org-card org-card-root" style="
                 font-family: 'Inter', sans-serif; 
-                background-color:#2c3e50; 
-                position:absolute; margin-top:-1px; margin-left:-1px; 
-                width:${d.width}px; height:${d.height}px; 
-                border-radius:8px; 
-                display:flex; flex-direction:column; justify-content:center; align-items:center;
-                box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
-                <div style="font-size:16px; color:#ffffff; font-weight:600; text-transform:uppercase; letter-spacing:1px;">
+                background: linear-gradient(135deg, ${color} 0%, ${adjustColorBrightness(color, -30)} 100%);
+                position:absolute; 
+                margin-top:-1px; 
+                margin-left:-1px; 
+                width:${d.width}px; 
+                height:${d.height}px; 
+                border-radius:16px; 
+                display:flex; 
+                flex-direction:column; 
+                justify-content:center; 
+                align-items:center;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.2), 0 4px 10px rgba(0,0,0,0.1);
+                border: 3px solid rgba(255,255,255,0.3);
+                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                cursor: pointer;">
+                <div style="font-size:20px; color:#ffffff; font-weight:700; text-transform:uppercase; letter-spacing:1.5px;">
                     ${d.data.first_name}
                 </div>
-                <div style="font-size:12px; color:#cbd5e0; margin-top:4px;">
-                    Total Reports: ${d.data._totalSubordinates}
+                <div style="font-size:14px; color:rgba(255,255,255,0.9); margin-top:8px; font-weight:500;">
+                    ${d.data._totalSubordinates} ${d.data._totalSubordinates === 1 ? 'Reporter' : 'Reportees'}
                 </div>
             </div>`;
         }
 
-        // Standard Card Styling
+        // Standard Card Styling - FULLY COLORED
         return `
-          <div style="
+          <div class="org-card" style="
               font-family: 'Inter', sans-serif; 
-              background-color:#FFFFFF; 
+              background: linear-gradient(135deg, ${color} 0%, ${lighterColor} 100%);
               position:absolute; 
               margin-top:-1px; 
               margin-left:-1px; 
               width:${d.width}px; 
               height:${d.height}px; 
-              border-radius:8px; 
-              border: 1px solid ${color};
-              border-top: 4px solid ${color};
-              box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+              border-radius:16px; 
+              border: 3px solid ${color};
+              box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12), 0 3px 8px rgba(0, 0, 0, 0.08);
               display:flex; 
               flex-direction:column; 
               justify-content:center; 
               align-items:center;
+              padding: 20px;
+              transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+              cursor: pointer;
+              position: relative;
+              overflow: hidden;
           ">
-              <div style="font-size:15px; color:#1f2937; font-weight:600; margin-bottom:4px;">
-                ${d.data.first_name} ${d.data.last_name}
-              </div>
-              <div style="font-size:12px; color:#64748b; margin-bottom:8px;">
-                ${d.data.department_name}
-              </div>
+              <!-- Shine effect on hover -->
               <div style="
-                  font-size:11px; 
-                  color: ${color}; 
-                  background-color: #f8fafc;
-                  border: 1px solid ${color}40;
-                  padding: 2px 8px;
-                  border-radius: 12px;
-                  font-weight: 600;
-              ">
-                Total Reports: ${d.data._totalSubordinates}
+                  position: absolute;
+                  top: -50%;
+                  left: -50%;
+                  width: 200%;
+                  height: 200%;
+                  background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+                  transform: rotate(45deg);
+                  pointer-events: none;
+              "></div>
+              
+              <!-- Content -->
+              <div style="position: relative; z-index: 1; text-align: center; width: 100%;">
+                  <div style="
+                      font-size:17px; 
+                      color:#ffffff; 
+                      font-weight:700; 
+                      margin-bottom:6px;
+                      line-height: 1.3;
+                      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                  ">
+                    ${d.data.first_name} ${d.data.last_name}
+                  </div>
+                  <div style="
+                      font-size:14px; 
+                      color:rgba(255,255,255,0.95); 
+                      margin-bottom:12px;
+                      font-weight:500;
+                      text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+                  ">
+                    ${d.data.department_name}
+                  </div>
+                  <div style="
+                      font-size:13px; 
+                      color: #ffffff; 
+                      background: rgba(255, 255, 255, 0.25);
+                      backdrop-filter: blur(10px);
+                      border: 2px solid rgba(255, 255, 255, 0.4);
+                      padding: 6px 14px;
+                      border-radius: 20px;
+                      font-weight: 700;
+                      display: inline-block;
+                      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+                      text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+                  ">
+                    ${d.data._totalSubordinates} ${d.data._totalSubordinates === 1 ? 'Reporter' : 'Reporters'}
+                  </div>
               </div>
           </div>
         `;
       })
       .nodeUpdate(function (d, i, arr) {
-        d3.select(this)
+        const nodeElement = d3.select(this);
+        const cardElement = nodeElement.select('.org-card');
+        
+        // Add hover effect with dashed border
+        cardElement.on('mouseenter', function() {
+          d3.select(this)
+            .style('transform', 'translateY(-8px) scale(1.03)')
+            .style('box-shadow', '0 15px 40px rgba(0, 0, 0, 0.2), 0 8px 16px rgba(0, 0, 0, 0.12)')
+            .style('border-style', 'dashed')
+            .style('border-width', '3px');
+        });
+        
+        cardElement.on('mouseleave', function() {
+          d3.select(this)
+            .style('transform', 'translateY(0) scale(1)')
+            .style('box-shadow', '0 8px 20px rgba(0, 0, 0, 0.12), 0 3px 8px rgba(0, 0, 0, 0.08)')
+            .style('border-style', 'solid')
+            .style('border-width', '3px');
+        });
+        
+        nodeElement
           .select('.node-rect')
           .attr('stroke', (d) => d.data._borderColor)
-          .attr('stroke-width', d.data._highlighted || d.data._upToTheRootHighlighted ? 4 : 1);
+          .attr('stroke-width', d.data._highlighted || d.data._upToTheRootHighlighted ? 4 : 0)
+          .attr('fill', 'transparent');
       })
       .render();
 });
