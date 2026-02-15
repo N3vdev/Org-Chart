@@ -1,6 +1,6 @@
 # Org-Chart
 
+v2
+<img width="936" height="734" alt="image" src="https://github.com/user-attachments/assets/5bdead2f-399e-4ea7-8db0-1d42822559fb" />
 
-<img width="1269" height="826" alt="image" src="https://github.com/user-attachments/assets/ea1b6782-4c12-41d3-98d3-9fdac8a58dac" />
-<img width="1689" height="730" alt="image" src="https://github.com/user-attachments/assets/1853cdc4-f450-4c2f-945a-a8483f42424b" />
-
+<img width="946" height="839" alt="image" src="https://github.com/user-attachments/assets/6fdd6771-67a4-4196-a8fb-b30e340487e6" />
