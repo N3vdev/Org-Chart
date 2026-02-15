@@ -1,0 +1,68 @@
+/* Modern Light Theme Variables */
+:root {
+  --bg-color: #f8f9fa;
+  --dot-color: #e1e4e8;
+  --text-main: #2c3e50;
+  --primary-color: #3b82f6; 
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  overflow: hidden;
+  background-color: var(--bg-color);
+}
+
+.chart-container {
+  height: 100vh;
+  background-color: var(--bg-color);
+  /* CSS Dot Pattern */
+  background-image: radial-gradient(var(--dot-color) 2px, transparent 2px);
+  background-size: 20px 20px;
+}
+
+/* --- Button Styles --- */
+.btn {
+  margin: 3px;
+  cursor: pointer;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  background-color: #ffffff;
+  color: var(--text-main);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn:hover {
+  background-color: #f1f5f9; /* Changed from red to soft grey */
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.btn i {
+  color: var(--primary-color);
+}
+
+.action-buttons {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  z-index: 10;
+}
+
+/* Remove old dark mode overlays */
+.svg-chart-container:before {
+  display: none;
+}
