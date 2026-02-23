@@ -25,13 +25,22 @@
 
   <body>
     <div class="chart-container"></div>
-
     <div class="action-buttons">
+
+
+      <button onclick="expandAll()" class="btn">
+        <i class="fas fa-plus-square"></i> Expand All
+      </button>
+
+      <button onclick="collapseAll()" class="btn">
+        <i class="fas fa-minus-square"></i> Collapse All
+      </button>
+            
       <button onclick="chart.fit()" class="btn">
         <i class="fas fa-sync"></i> Fit
       </button>
 
-      <button onclick='chart.layout(["right","bottom","left","top"][index++%4]).render().fit()' class="btn">
+      <button onclick='chart.layout(["bottom","top"][index++%4]).render().fit()' class="btn">
         <i class="fas fa-retweet"></i> Swap
       </button>
 
@@ -52,6 +61,7 @@
       </button>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
     <script src="script.js"></script>
   </body>
 </html>
