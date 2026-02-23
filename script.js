@@ -22,7 +22,7 @@ const OPTIONAL_COLUMNS = {
 // ===============================
 
 const REGION_CONFIG = {
-  ENABLE: true, // toggle region grouping
+  ENABLE: false, // toggle region grouping
   COLUMN_NAME: "Employee Region", // Excel column name
   LABEL_SUFFIX: " Province", // how region nodes should display
 };
@@ -499,3 +499,4 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
 });
+
