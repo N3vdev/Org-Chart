@@ -12,6 +12,7 @@ const COLUMN_CONFIG = {
   title: "Employee Title",
 };
 
+const TREE_DEPTH = 3
 const OPTIONAL_COLUMNS = {
 
   location: "Employee Location",
@@ -30,7 +31,7 @@ let data = [];
 
 function expandAll() {
   chart.duration(0);
-  chart.expandAll();
+    chart.expandAll()
   chart.render().fit();
 
   // restore animation after operation
@@ -39,12 +40,15 @@ function expandAll() {
   }, 50);
 }
 function collapseAll() {
-  chart.collapseAll();
-  chart.expandLevel(1);
-  chart.expandLevel(2);
-  chart.expandLevel(3);
-  chart.render();
-  chart.fit();
+  // Clear all expansion flags
+  data.forEach(d => {
+    d._expanded = false;
+  });
+
+  // Reapply default depth expansion
+  applyExpansionDepth(TREE_DEPTH);
+
+  chart.data(data).render().fit();
 }
 
 async function loadExcel() {
@@ -168,6 +172,31 @@ function processColors(data) {
   });
 }
 
+function applyExpansionDepth(depthLimit) {
+  const nodeMap = {};
+  data.forEach(d => nodeMap[d.id] = d);
+
+  function getDepth(node) {
+    let depth = 0;
+    let current = node;
+    const visited = new Set();
+
+    while (current.parentId && nodeMap[current.parentId]) {
+      if (visited.has(current.parentId)) break;
+      visited.add(current.parentId);
+
+      current = nodeMap[current.parentId];
+      depth++;
+    }
+
+    return depth;
+  }
+
+  data.forEach(d => {
+    const depth = getDepth(d);
+    d._expanded = depth < depthLimit;
+  });
+}
 
 function adjustColorBrightness(color, amount) {
   const clamp = (num) => Math.min(255, Math.max(0, num));
@@ -226,6 +255,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   data.forEach((d) => {
     d._totalSubordinates = countTotalSubordinates(d.id);
   });
+
+  // Set _expanded on all nodes up to level 3
+    applyExpansionDepth(TREE_DEPTH)
 
   // C. Color Inheritance
   processColors(data);
@@ -461,6 +493,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         )
         .attr("fill", "transparent");
     })
+ 
     .render();
-    
+
+
+
 });
