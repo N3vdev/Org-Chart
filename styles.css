@@ -161,3 +161,7 @@ body {
 .svg-chart-container::after {
   display: none !important;
 }
+
+.svg-chart-container {
+  height: 100% !important;
+}
